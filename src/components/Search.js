@@ -46,7 +46,7 @@ export const Search = () => {
   }
 
   const onInput = ({ target }) => {
-    if (isOnline) {
+    if (isOnline && target.value !== '') {
       setQuery(target.value)
     }
   }
