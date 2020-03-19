@@ -91,11 +91,13 @@ const fixTableCaption = (htmlString) => {
   const tableNodes = node.querySelectorAll('table.wikitable')
   for (const tableNode of tableNodes) {
     const thContent = Array.from(tableNode.querySelectorAll('th')).map(th => th.textContent).join(', ')
-    if (tableNode.caption) {
-      tableNode.caption.innerHTML = `<b class='hidden-in-table'>More Information:</b><p class='hidden-in-table'>${thContent}</p><p>${tableNode.caption.textContent}</p>`
+    const normalizedThContent = thContent.replace(/\[\d+]/g, '')
+    if (tableNode.caption && tableNode.caption.textContent) {
+      tableNode.caption.innerHTML = `<b class='hidden-in-table'>More Information:</b><p class='hidden-in-table'>${normalizedThContent}</p><span>${tableNode.caption.textContent}</span>`
     } else {
       const caption = tableNode.createCaption()
-      caption.innerHTML = `<b class='hidden-in-table'>More Information:</b><p class='hidden-in-table'>${thContent}</p>Table`
+      caption.className = 'hidden-in-table'
+      caption.innerHTML = `<b class='hidden-in-table'>More Information:</b><p class='hidden-in-table'>${normalizedThContent}</p>Table`
     }
   }
 
