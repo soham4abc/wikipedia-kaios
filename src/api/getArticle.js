@@ -38,14 +38,14 @@ export const getArticle = (lang, title) => {
         sections.push({
           title: s.line,
           anchor: s.anchor,
-          content: fixTableCaption(fixImageUrl(s.text))
+          content: fixImageUrl(s.text)
         })
       } else {
         // group into previous section when toclevel > 1
         const previousSection = sections[sections.length - 1]
         const header = 'h' + (s.toclevel + 1)
         const headerLine = `<${header} data-anchor=${s.anchor}>${s.line}</${header}>`
-        previousSection.content += fixTableCaption(fixImageUrl(headerLine + s.text))
+        previousSection.content += fixImageUrl(headerLine + s.text)
       }
 
       // build toc structure (level 1 to 3)
@@ -83,25 +83,6 @@ const fixImageUrl = (htmlString) => {
   // The app is served from the app:// protocol so protocol-relative
   // image sources don't work.
   return htmlString.replace(/src="\/\//gi, 'src="https://')
-}
-
-const fixTableCaption = (htmlString) => {
-  const parser = new DOMParser()
-  const node = parser.parseFromString(htmlString, 'text/html')
-  const tableNodes = node.querySelectorAll('table.wikitable')
-  for (const tableNode of tableNodes) {
-    const thContent = Array.from(tableNode.querySelectorAll('th')).map(th => th.textContent).join(', ')
-    const normalizedThContent = thContent.replace(/\[\d+]/g, '')
-    if (tableNode.caption && tableNode.caption.textContent) {
-      tableNode.caption.innerHTML = `<b class='hidden-in-table'>More Information:</b><p class='hidden-in-table'>${normalizedThContent}</p><span>${tableNode.caption.textContent}</span>`
-    } else {
-      const caption = tableNode.createCaption()
-      caption.className = 'hidden-in-table'
-      caption.innerHTML = `<b class='hidden-in-table'>More Information:</b><p class='hidden-in-table'>${normalizedThContent}</p>Table`
-    }
-  }
-
-  return node.childNodes[0].innerHTML
 }
 
 const convertPlainText = string => {

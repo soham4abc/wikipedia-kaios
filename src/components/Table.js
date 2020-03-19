@@ -5,7 +5,6 @@ import { useI18n, useSoftkey, useScroll } from 'hooks'
 export const Table = ({ close, content }) => {
   const containerRef = useRef()
   const i18n = useI18n()
-  //   const lang = i18n.locale
   const [scrollDown, scrollUp] = useScroll(containerRef, 20, 'y')
   const [scrollRight, scrollLeft] = useScroll(containerRef, 20, 'x')
 
